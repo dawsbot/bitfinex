@@ -12,14 +12,18 @@ __all__ = ['ticker', 'today', 'orderbook', 'lendbook', 'stats', 'trades', 'lends
 
 URL = "https://api.bitfinex.com/v1"
 
-API_KEY = "" # put your API private key here.
-API_SECRET = "" # put your API secret here.
+fp = open("./keys.txt")
+
+API_KEY = fp.readline().rstrip() # put your API public key here.
+API_SECRET = fp.readline().rstrip() # put your API private key here.
+print "Your pub: " + str(API_KEY)
+print "Your priv: " + str(API_SECRET)
 
 # unauthenticated
 
 def ticker(symbol='btcusd'): # gets the innermost bid and asks and information on the most recent trade.
 
-	r = requests.get(URL + "/pubticker/" + symbol, verify=False) # <== UPDATED TO LATEST VERSION OF BFX!
+	r = requests.get(URL + "/pubticker/" + symbol, verify=True) # <== UPDATED TO LATEST VERSION OF BFX!
 	rep = r.json()
 
 	try:
@@ -31,7 +35,7 @@ def ticker(symbol='btcusd'): # gets the innermost bid and asks and information o
 
 def stats(symbol='btcusd'): # Various statistics about the requested pairs.
 
-	r = requests.get(URL + "/stats/" + symbol, verify=False) # <== UPDATED TO LATEST VERSION OF BFX!
+	r = requests.get(URL + "/stats/" + symbol, verify=True) # <== UPDATED TO LATEST VERSION OF BFX!
 	rep = r.json()
 	return rep
 
@@ -43,7 +47,7 @@ def stats(symbol='btcusd'): # Various statistics about the requested pairs.
 
 def today(symbol='btcusd'): # today's low, high and volume.
 
-	r = requests.get(URL + "/today/" + symbol, verify=False)
+	r = requests.get(URL + "/today/" + symbol, verify=True)
 	rep = r.json()
 
 	try:
@@ -55,35 +59,35 @@ def today(symbol='btcusd'): # today's low, high and volume.
 
 def orderbook(symbol='btcusd'): # get the full order book.
 
-	r = requests.get(URL + "/book/" + symbol, verify=False)
+	r = requests.get(URL + "/book/" + symbol, verify=True)
 	rep = r.json()
 
 	return rep
 
 def lendbook(currency='btc'): # get the full lend book.
 
-	r = requests.get(URL + "/lendbook/" + currency, verify=False)
+	r = requests.get(URL + "/lendbook/" + currency, verify=True)
 	rep = r.json()
 
 	return rep
 
 def trades(symbol='btcusd'): # get a list of the most recent trades for the given symbol.
 
-	r = requests.get(URL + "/trades/" + symbol, verify=False)
+	r = requests.get(URL + "/trades/" + symbol, verify=True)
 	rep = r.json()
 
 	return rep
 
 def lends(currency='btc'): # get a list of the most recent lending data for the given currency: total amount lent and rate (in % by 365 days).
 
-	r = requests.get(URL + "/lends/" + currency, verify=False)
+	r = requests.get(URL + "/lends/" + currency, verify=True)
 	rep = r.json()
 
 	return rep
 
 def symbols(): # get a list of valid symbol IDs.
 
-	r = requests.get(URL + "/symbols", verify=False)
+	r = requests.get(URL + "/symbols", verify=True)
 	rep = r.json()
 
 	return rep
@@ -123,7 +127,7 @@ def place_order(amount, price, side, ord_type, symbol='btcusd', exchange='all'):
 	}
 
 	signed_payload = payloadPacker(payload)
-	r = requests.post(URL + "/order/new", headers=signed_payload, verify=False)
+	r = requests.post(URL + "/order/new", headers=signed_payload, verify=True)
 	rep = r.json()
 
 	try:
@@ -144,7 +148,7 @@ def delete_order(order_id): # cancel an order.
 	}
 
 	signed_payload = payloadPacker(payload)
-	r = requests.post(URL + "/order/cancel", headers=signed_payload, verify=False)
+	r = requests.post(URL + "/order/cancel", headers=signed_payload, verify=True)
 	rep = r.json()
 
 	try:
@@ -165,7 +169,7 @@ def status_order(order_id): # get the status of an order. Is it active? Was it c
 	}
 
 	signed_payload = payloadPacker(payload)
-	r = requests.post(URL + "/order/status", headers=signed_payload, verify=False)
+	r = requests.post(URL + "/order/status", headers=signed_payload, verify=True)
 	rep = r.json()
 
 	try:
@@ -185,7 +189,7 @@ def active_orders(): # view your active orders.
 	}
 
 	signed_payload = payloadPacker(payload)
-	r = requests.post(URL + "/orders", headers=signed_payload, verify=False)
+	r = requests.post(URL + "/orders", headers=signed_payload, verify=True)
 	rep = r.json()
 
 	return rep
@@ -200,7 +204,7 @@ def active_positions(): # view your active positions.
 	}
 
 	signed_payload = payloadPacker(payload)
-	r = requests.post(URL + "/positions", headers=signed_payload, verify=False)
+	r = requests.post(URL + "/positions", headers=signed_payload, verify=True)
 	rep = r.json()
 
 	return rep
@@ -216,7 +220,7 @@ def claim_position(position_id): # Claim a position.
 	}
 
 	signed_payload = payloadPacker(payload)
-	r = requests.post(URL + "/position/claim", headers=signed_payload, verify=False)
+	r = requests.post(URL + "/position/claim", headers=signed_payload, verify=True)
 	rep = r.json()
 
 	return rep
@@ -233,7 +237,7 @@ def past_trades(timestamp, symbol='btcusd'): # view your past trades
 	}
 
 	signed_payload = payloadPacker(payload)
-	r = requests.post(URL + "/mytrades", headers=signed_payload, verify=False)
+	r = requests.post(URL + "/mytrades", headers=signed_payload, verify=True)
 	rep = r.json()
 
 	return rep
@@ -253,7 +257,7 @@ def place_offer(currency, amount, rate, period, direction):
 	}
 
 	signed_payload = payloadPacker(payload)
-	r = requests.post(URL + "/offer/new", headers=signed_payload, verify=False)
+	r = requests.post(URL + "/offer/new", headers=signed_payload, verify=True)
 	rep = r.json()
 
 	return rep
@@ -269,7 +273,7 @@ def cancel_offer(offer_id):
 	}
 
 	signed_payload = payloadPacker(payload)
-	r = requests.post(URL + "/offer/cancel", headers=signed_payload, verify=False)
+	r = requests.post(URL + "/offer/cancel", headers=signed_payload, verify=True)
 	rep = r.json()
 
 	return rep
@@ -285,7 +289,7 @@ def status_offer(offer_id):
 	}
 
 	signed_payload = payloadPacker(payload)
-	r = requests.post(URL + "/offer/status", headers=signed_payload, verify=False)
+	r = requests.post(URL + "/offer/status", headers=signed_payload, verify=True)
 	rep = r.json()
 
 	return rep
@@ -300,7 +304,7 @@ def active_offers():
 	}
 
 	signed_payload = payloadPacker(payload)
-	r = requests.post(URL + "/offers", headers=signed_payload, verify=False)
+	r = requests.post(URL + "/offers", headers=signed_payload, verify=True)
 	rep = r.json()
 
 	return rep
@@ -315,7 +319,7 @@ def balances(): # see your balances.
 	}
 
 	signed_payload = payloadPacker(payload)
-	r = requests.post(URL + "/balances", headers=signed_payload, verify=False)
+	r = requests.post(URL + "/balances", headers=signed_payload, verify=True)
 	rep = r.json()
 
 	return rep
