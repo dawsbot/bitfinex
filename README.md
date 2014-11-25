@@ -6,4 +6,10 @@ Open source ripped and changed from http://jndoksarchive.altervista.org/bitfinex
 ```pip install -r requirements.txt```
 
 #Keys
-Follow the naming convention in ```keys.txt``` including the tailing newline
+Create file ```keys.txt``` in the main directory with the following syntax:
+
+    public key
+    private key
+    [insert newline here]
+
+
