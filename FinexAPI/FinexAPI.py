@@ -13,7 +13,7 @@ __all__ = ['ticker', 'today', 'orderbook', 'lendbook', 'stats', 'trades', 'lends
 
 URL = "https://api.bitfinex.com/v1"
 
-fp = open("./keys.txt")
+fp = open("../keys.txt")
 
 API_KEY = fp.readline().rstrip() # put your API public key here.
 API_SECRET = fp.readline().rstrip() # put your API private key here.
