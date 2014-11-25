@@ -17,7 +17,7 @@ fp = open("./keys.txt")
 API_KEY = fp.readline().rstrip() # put your API public key here.
 API_SECRET = fp.readline().rstrip() # put your API private key here.
 print "Your pub: " + str(API_KEY)
-print "Your priv: " + str(API_SECRET)
+#print "Your priv: " + str(API_SECRET)
 
 # unauthenticated
 
@@ -225,7 +225,7 @@ def claim_position(position_id): # Claim a position.
 
 	return rep
 
-def past_trades(timestamp, symbol='btcusd'): # view your past trades
+def past_trades(timestamp=0, symbol='btcusd'): # view your past trades
 
 	payload = {
 
