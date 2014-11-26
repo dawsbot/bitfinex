@@ -1,4 +1,7 @@
 #!/usr/bin/env python
 import FinexAPI
 
-print FinexAPI.past_trades(0)
+myvar = FinexAPI.past_trades(0)
+
+for obj in myvar:
+	print "price: " + str(obj["price"]) + " type: " + str(obj["type"])
