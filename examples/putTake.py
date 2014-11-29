@@ -3,7 +3,7 @@
 import FinexAPI
 
 diff = 2 #The amount above or below you want
-amount = "0.01"
+amount = "0.07"
 
 marketPrice = FinexAPI.ticker()["last_price"]
 buyPrice = float(marketPrice) - diff

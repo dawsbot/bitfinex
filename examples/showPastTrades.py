@@ -5,19 +5,28 @@ import matplotlib.pyplot as plt
 timestamps = []
 prices = []
 colors = []
+amounts = []
+profit = 0
 
 myvar = FinexAPI.past_trades()
+#print myvar
 
 for obj in myvar:
-	prices.append(obj["price"])
-	timestamps.append(obj["timestamp"])
-	if (obj["type"] == "Sell"):
-		colors.append("red")
-	else:
-		colors.append("green")
-		
+  price = obj["price"]
+  prices.append(price)
+  timestamps.append(obj["timestamp"])
+  amounts.append(float(obj["amount"]) * 170 + 10)
+  if (obj["type"] == "Sell"):
+    colors.append("red")
+    profit = profit + float(obj["amount"]) * float(price)
 
-	print "price: " + str(obj["price"]) + " type: " + str(obj["type"])
+  else:
+    colors.append("green")
+    profit = profit - float(obj["amount"]) * float(price)
+    
 
-plt.scatter(timestamps, prices, s=300, c=colors, alpha=.7)
+  print str(obj["type"] + " " + str(obj["amount"]) + "BTC at " + str(obj["price"]))
+
+print "\nYour unrealized potential profit: " + str(profit) + " USD"
+plt.scatter(timestamps, prices, s=amounts, c=colors, alpha=.6)
 plt.show()
