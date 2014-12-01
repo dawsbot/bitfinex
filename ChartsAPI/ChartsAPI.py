@@ -2,28 +2,75 @@
 # report ANY bug @ https://github.com/dawsonbotsford/bitfinex/issues
 
 import requests
-import json
 import time
+import matplotlib.pyplot as plt
 
 __all__ = ['trades']
 
-URL = "http://api.bitcoincharts.com/v1/trades.csv?symbol="
+URL = "http://api.bitcoincharts.com/v1/trades.csv?symbol=bitfinexUSD&start="
 
 #unixtime,price,amount
-def trades(): # gets the innermost bid and asks and information on the most recent trade.
-  response = requests.get(URL + "bitfinexUSD&start=1417337798")
-  stringResponse = str(response.text.splitlines())
-  
-  splitline = stringResponse[0].split(',') 
-  timestamp1 = splitline[0] 
-  print "timestamp1: " + str(timestamp1)
-  price1 = splitline[1]
-    
-  '''
-	try:
-		rep['last_price']
-	except KeyError:
-		return rep['message']
+def trades(timeSince): # gets the innermost bid and asks and information on the most recent trade.
+  adjustedTime = int(time.time()) - timeSince
+  response = requests.get(URL + str(adjustedTime))
+  splitResponse = response.text.splitlines()
+  prices = []
+  timestamps = []
+  amounts = [] 
+  mymax = 0
+   
+  for i,line in enumerate(splitResponse):
+    splitline = splitResponse[i].split(',') 
+    timestamp = splitline[0] 
+    #print "timestamp" + str(i) + ": " + str(timestamp)
+    price = round(float(splitline[1]),2)
+    #print "price" + str(i) + ": " + str(price)
+    amount = splitline[2] 
+    print "amount: " + str(amount)
+    if mymax < amount:
+       mymax = amount
+    #print "comparing btc sizes of " + str(mymax) + " and " + str(amount)
+    timestamps.append(float(timestamp))
+    prices.append(float(price))
+    amounts.append(float(amount)*5 )
+    #amounts.append(float(amount) * 170 + 10)
+  print "mymax: " + mymax
+  plt.scatter(timestamps, prices, s=amounts, alpha=.2)
+  plt.show()
 
-	return rep
-  '''
+
+#unixtime,price,amount
+'''
+  inputs:
+
+    timeSince: the epoch length behind this moment you want to pull
+
+'''
+def sma(timeSince): # gets the innermost bid and asks and information on the most recent trade.
+  adjustedTime = int(time.time()) - timeSince
+  response = requests.get(URL + str(adjustedTime))
+  splitResponse = response.text.splitlines()
+  prices = []
+  timestamps = []
+  amounts = [] 
+  mymax = 0
+   
+  for i,line in enumerate(splitResponse):
+    splitline = splitResponse[i].split(',') 
+    timestamp = splitline[0] 
+    #print "timestamp" + str(i) + ": " + str(timestamp)
+    price = round(float(splitline[1]),2)
+    #print "price" + str(i) + ": " + str(price)
+    amount = splitline[2] 
+    print "amount: " + str(amount)
+    if mymax < amount:
+       mymax = amount
+    #print "comparing btc sizes of " + str(mymax) + " and " + str(amount)
+    timestamps.append(float(timestamp))
+    prices.append(float(price))
+    amounts.append(float(amount)*5 )
+    #amounts.append(float(amount) * 170 + 10)
+  print "mymax: " + mymax
+  plt.scatter(timestamps, prices, s=amounts, alpha=.2)
+  plt.show()
+ 
