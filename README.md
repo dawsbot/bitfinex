@@ -22,4 +22,8 @@ Feel free to use and modify anything here.<br>
 ```putTake.py``` is the most interest development file occuring here <br>
 It takes the current market price and places a put and take on each side of the market value.
 
+For fun, here is a little vis of my trade history on BitFinex. (The smallest dots were indeed performed by execution of the file ```/examples/putTake.py```)<br>
+Create this for your account by executing ```/examples/showPastTrades.py```<br>
+![screenshot](http://i.imgur.com/bV8PZ1C.png)
+
 As always, you take responsibility for everything you do with this code. I am not liable for any losses or gains.
