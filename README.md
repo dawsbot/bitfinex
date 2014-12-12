@@ -24,6 +24,6 @@ It takes the current market price and places a put and take on each side of the 
 
 For fun, here is a little vis of my trade history on BitFinex. (The smallest dots were indeed performed by execution of the file ```/examples/putTake.py```)<br>
 Create this for your account by executing ```/examples/showPastTrades.py```<br>
-![screenshot](http://i.imgur.com/bV8PZ1C.png)
+![screenshot](http://i.imgur.com/8PBxnvZ.png)
 
 As always, you take responsibility for everything you do with this code. I am not liable for any losses or gains.
