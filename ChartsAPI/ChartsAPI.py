@@ -3,10 +3,12 @@
 
 import requests
 import time
+import calendar
 import matplotlib.pyplot as plt
 
 __all__ = ['trades']
 
+#CSV endpoint where transaction history exists
 URL = "http://api.bitcoincharts.com/v1/trades.csv?symbol=bitfinexUSD&start="
 
 #unixtime,price,amount
@@ -18,34 +20,34 @@ def trades(timeSince): # gets the innermost bid and asks and information on the 
   timestamps = []
   amounts = [] 
   mymax = 0
-   
+
+  #Only keep one of each 30 lines
+  splitResponse = splitResponse[::30]  
+
   for i,line in enumerate(splitResponse):
     splitline = splitResponse[i].split(',') 
     timestamp = splitline[0] 
-    #print "timestamp" + str(i) + ": " + str(timestamp)
     price = round(float(splitline[1]),2)
-    #print "price" + str(i) + ": " + str(price)
     amount = splitline[2] 
-    print "amount: " + str(amount)
+    #print "amount: " + str(amount)
     if mymax < amount:
        mymax = amount
-    #print "comparing btc sizes of " + str(mymax) + " and " + str(amount)
     timestamps.append(float(timestamp))
     prices.append(float(price))
     amounts.append(float(amount)*5 )
-    #amounts.append(float(amount) * 170 + 10)
-  print "mymax: " + mymax
-  plt.scatter(timestamps, prices, s=amounts, alpha=.2)
+  #print "mymax: " + mymax
+  #plt.scatter(timestamps, prices, s=amounts, alpha=.2)
+  plt.plot(timestamps, prices, 'k-', linewidth=.7)
   plt.show()
-
 
 #unixtime,price,amount
 '''
   inputs:
 
     timeSince: the epoch length behind this moment you want to pull
-
+    
 '''
+#unixtime,price,amount
 def sma(timeSince): # gets the innermost bid and asks and information on the most recent trade.
   adjustedTime = int(time.time()) - timeSince
   response = requests.get(URL + str(adjustedTime))
@@ -54,23 +56,34 @@ def sma(timeSince): # gets the innermost bid and asks and information on the mos
   timestamps = []
   amounts = [] 
   mymax = 0
-   
+
+  #Only keep one of each 30 lines
+  splitResponse = splitResponse[::30]  
+
+  
   for i,line in enumerate(splitResponse):
     splitline = splitResponse[i].split(',') 
     timestamp = splitline[0] 
-    #print "timestamp" + str(i) + ": " + str(timestamp)
     price = round(float(splitline[1]),2)
-    #print "price" + str(i) + ": " + str(price)
     amount = splitline[2] 
-    print "amount: " + str(amount)
+    #print "amount: " + str(amount)
     if mymax < amount:
        mymax = amount
-    #print "comparing btc sizes of " + str(mymax) + " and " + str(amount)
     timestamps.append(float(timestamp))
     prices.append(float(price))
     amounts.append(float(amount)*5 )
-    #amounts.append(float(amount) * 170 + 10)
-  print "mymax: " + mymax
-  plt.scatter(timestamps, prices, s=amounts, alpha=.2)
+  #print "mymax: " + mymax
+  #plt.scatter(timestamps, prices, s=amounts, alpha=.2)
+  plt.plot(timestamps, prices, 'k-', linewidth=.7)
   plt.show()
- 
+
+'''
+  inputs:
+
+    splitResponse: Full string of transactions 
+    timeStamp: the epoch time closest you want a transaction of
+    
+'''
+def get_transaction(splitResponse, timeStamp):
+  time = calendar.timegm(time.gmtime()) - 10   
+  
