@@ -12,6 +12,7 @@ import calendar
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import matplotlib.dates as mdates
+from matplotlib.finance import candlestick
 
 __all__ = ['trades']
 
@@ -42,30 +43,64 @@ def trades(timeSince): # gets the innermost bid and asks and information on the 
     timestamp = splitline[0] 
     volume = round(float(splitline[1]),2)
     amount = splitline[2] 
-    
-    print "appending timestamp ", timestamp
+    times = []
+    vols = [] 
+    #print "appending timestamp ", timestamp
+    '''
     timestamps.append(float(timestamp))
     volumes.append(float(volume))
     amounts.append(float(amount))
+    '''
+    timestamps.insert(0, float(timestamp))
+    volumes.insert(0,float(volume))
+    amounts.insert(0, float(amount))
 
-  currentTime = calendar.timegm(time.gmtime())
+  #currentTime = calendar.timegm(time.gmtime())
+  currentTime = timestamps[0]
+  print "time remainder: ", (currentTime % 60)
   targetTime = currentTime - (currentTime % 60)
-  print "current time: ", calendar.timegm(time.gmtime())
+  print "current time: ", currentTime
   print "closest minute epoch: ", targetTime
-  print "timestamp 0 and 1: ", timestamps[-1], timestamps[-2]
+
+  currentHigh = timestamps[0]
+  currentLow = timestamps[0]
+
   for i,element in enumerate(timestamps):
-    print "inside for loop at timestamp", element
-    if (i == len(timestamps) - 1):
+    #print "inside for loop at timestamp", element
+    if (i == len(timestamps) - 1): #Stop one early so we don't go over bounds
       break
+    if (currentHigh < element):
+      currentHigh = element
+    else:
+      if (currentLow > element):
+        currentLow = element
+    #print "timestamps[i], +1: ", timestamps[i], ", ", timestamps[i+1]
     if timestamps[i] > targetTime and timestamps[i+1] < targetTime:
-      print "close: ", timestamps[i], " open: ", timestamps[i+1] 
-'''
+      times.append(timestamps[i])
+      openp.append(timestamps[i])
+      closep.append(timestamps[i+1])
+      highp.append(currentHigh)
+      lowp.append(currentLow)
+      vols.append(volumes[i])
+      print "\n\nclose: ", timestamps[i], " open: ", timestamps[i+1] 
+      targetTime -= 60 #Look at open/close of next minute
+      currentLow = timestamps[i+1]
+      currentHigh = currentLow
+
+  candleAr = []
+  for i, element in enumerate(times):
+    appendLine = mdates.epoch2num(times[i]), openp[i], closep[i], highp[i], lowp[i], vols[i]
+    candleAr.append(appendLine)
+
+
   fig = plt.figure()
 
   #Generate first volume chart (on top)
   ax1 = plt.subplot(2,1,1)
   secs = mdates.epoch2num(timestamps)
-  ax1.plot_date(secs, volumes, 'k-', linewidth=.7)
+  candlestick(ax1, candleAr, width=1, colorup='g', colordown='r')
+  #ax1.plot_date(secs, volumes, 'k-', linewidth=.7)
+
   ax1.grid(True)
   plt.xlabel('Date')
   plt.ylabel('Bitcoin Price')
@@ -88,5 +123,4 @@ def trades(timeSince): # gets the innermost bid and asks and information on the 
 
   plt.show()
 
-'''
-trades(69)
+trades(1290)
