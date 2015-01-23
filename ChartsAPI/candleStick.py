@@ -8,7 +8,6 @@ import time
 import datetime
 import numpy as np
 
-
 import calendar
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
@@ -19,41 +18,59 @@ __all__ = ['trades']
 #CSV endpoint where transaction history exists
 URL = "http://api.bitcoincharts.com/v1/trades.csv?symbol=bitfinexUSD&start="
 
-#unixtime,price,amount
+#unixtime,volume,amount
 def trades(timeSince): # gets the innermost bid and asks and information on the most recent trade.
   adjustedTime = int(time.time()) - timeSince
   response = requests.get(URL + str(adjustedTime))
   splitResponse = response.text.splitlines()
-  prices = []
+  volumes = []
   timestamps = []
   amounts = [] 
-  mymax = 0
 
+  lowp = []
+  highp = []
+  openp = []
+  closep = []
+   
   #Only keep one of each 30 lines
   #splitResponse = splitResponse[::30]  
 
+  print "First entry to splitResponse ", splitResponse[0]
+#Generate arrays for timestamp, volume, and volume
   for i,line in enumerate(splitResponse):
     splitline = splitResponse[i].split(',') 
     timestamp = splitline[0] 
-    price = round(float(splitline[1]),2)
+    volume = round(float(splitline[1]),2)
     amount = splitline[2] 
-    #print "amount: " + str(amount)
-    if mymax < amount:
-       mymax = amount
     
+    print "appending timestamp ", timestamp
     timestamps.append(float(timestamp))
-    prices.append(float(price))
-    amounts.append(float(amount)*5 )
+    volumes.append(float(volume))
+    amounts.append(float(amount))
 
+  currentTime = calendar.timegm(time.gmtime())
+  targetTime = currentTime - (currentTime % 60)
+  print "current time: ", calendar.timegm(time.gmtime())
+  print "closest minute epoch: ", targetTime
+  print "timestamp 0 and 1: ", timestamps[-1], timestamps[-2]
+  for i,element in enumerate(timestamps):
+    print "inside for loop at timestamp", element
+    if (i == len(timestamps) - 1):
+      break
+    if timestamps[i] > targetTime and timestamps[i+1] < targetTime:
+      print "close: ", timestamps[i], " open: ", timestamps[i+1] 
+'''
   fig = plt.figure()
-  ax1 = plt.subplot(2,1,1)
 
+  #Generate first volume chart (on top)
+  ax1 = plt.subplot(2,1,1)
   secs = mdates.epoch2num(timestamps)
-  ax1.plot_date(secs, prices, 'k-', linewidth=.7)
+  ax1.plot_date(secs, volumes, 'k-', linewidth=.7)
   ax1.grid(True)
   plt.xlabel('Date')
   plt.ylabel('Bitcoin Price')
 
+  #Generate second volume chart (on bottom)
   ax2 = plt.subplot(2,1,2, sharex=ax1)
   ax2.plot(secs, amounts)
   ax2.grid(True)
@@ -71,4 +88,5 @@ def trades(timeSince): # gets the innermost bid and asks and information on the 
 
   plt.show()
 
-trades(119)
+'''
+trades(69)
