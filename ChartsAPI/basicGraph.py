@@ -41,11 +41,13 @@ def trades(timeSince): # gets the innermost bid and asks and information on the 
     if mymax < amount:
        mymax = amount
     timestamps.append(float(timestamp))
+    print "\nEvent at time: ",mdates.epoch2num(float(timestamp))
     prices.append(float(price))
     amounts.append(float(amount)*5 )
 
   fig = plt.figure()
-  ax1 = plt.subplot(2,1,1)
+  #ax1 = plt.subplot(2,1,1)
+  ax1 = plt.subplot2grid((5,4), (0,0), rowspan=4, colspan=4)
 
   secs = mdates.epoch2num(timestamps)
   ax1.plot_date(secs, prices, 'k-', linewidth=.7)
@@ -53,7 +55,8 @@ def trades(timeSince): # gets the innermost bid and asks and information on the 
   plt.xlabel('Date')
   plt.ylabel('Bitcoin Price')
 
-  ax2 = plt.subplot(2,1,2, sharex=ax1)
+  #ax2 = plt.subplot(2,1,2, sharex=ax1)
+  ax2 = plt.subplot2grid((5,4), (4,0), sharex=ax1, rowspan=1, colspan=4)
   ax2.plot(secs, amounts)
   ax2.grid(True)
   plt.ylabel('Volume')
