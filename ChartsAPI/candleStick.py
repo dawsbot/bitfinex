@@ -42,6 +42,7 @@ def trades(timeSince): # gets the innermost bid and asks and information on the 
     splitline = splitResponse[i].split(',') 
     timestamp = splitline[0] 
     price = round(float(splitline[1]),2)
+    print "\nPrice: ", price
     amount = splitline[2] 
     times = []
     vols = [] 
@@ -70,10 +71,10 @@ def trades(timeSince): # gets the innermost bid and asks and information on the 
       print "AT END OF STRING. timestamp ", element
       break
     if (currentHigh < element):
-      currentHigh = element
+      currentHigh = prices[i]
     else:
       if (currentLow > element):
-        currentLow = element
+        currentLow = prices[i]
     #print "timestamps[i], +1: ", timestamps[i], ", ", timestamps[i+1]
     if timestamps[i+1] < targetTime:
       #times.append(timestamps[i])
@@ -83,18 +84,20 @@ def trades(timeSince): # gets the innermost bid and asks and information on the 
       highp.append(currentHigh)
       lowp.append(currentLow)
       vols.append(amounts[i])
-      print "\n\nclose: ", prices[i], " open: ", prices[i+1] 
+      #print "\n\nclose: ", prices[i], " open: ", prices[i+1] 
       targetTime -= 60 #Look at open/close of next minute
       print "new target time: ", targetTime
       currentLow = prices[i+1]
-      currentHigh = currentLow
+      currentHigh = prices[i+1]
+      print "currentHigh: ", currentHigh
 
   candleAr = []
   for i, element in enumerate(times):
 #    dates = matplotlib.dates.date2num(list_of_datetimes)
     #appendLine = mdates.epoch2num(times[i]), openp[i], closep[i], highp[i], lowp[i], vols[i]
     print "Event at time: ", times[i]
-    appendLine = mdates.epoch2num(times[i]), openp[i], closep[i], highp[i], lowp[i], vols[i]
+    appendLine = mdates.epoch2num(times[i]), openp[i], closep[i], highp[i], lowp[i]
+    #appendLine = mdates.epoch2num(times[i]), openp[i], closep[i], highp[i], lowp[i], vols[i]
     print "append line: ", appendLine
     candleAr.append(appendLine)
 
@@ -104,8 +107,12 @@ def trades(timeSince): # gets the innermost bid and asks and information on the 
   #Generate first price chart (on top)
   #ax1 = plt.subplot(2,1,1)
   ax1 = plt.subplot(1,1,1)
-  secs = mdates.epoch2num(timestamps)
-  candlestick(ax1, candleAr, width=.5, colorup='g', colordown='r')
+#  secs = mdates.epoch2num(timestamps)
+  print "\nPrinting candeAr!"
+  for i in candleAr:
+    print i
+  candlestick(ax1, candleAr, width = .0005, colorup='g', colordown='r')
+  #candlestick(ax1, ((1, 6, 5, 4, 5), (6, 9, 8, 3, 10)), colorup='g', colordown='r')
   #ax1.plot_date(secs, prices, 'k-', linewidth=.7)
 
   ax1.grid(True)
@@ -122,13 +129,16 @@ def trades(timeSince): # gets the innermost bid and asks and information on the 
   #Use a DateFormatter to set the data to the correct format.
   #Choose your xtick format string
   #date_fmt = '%d-%m-%y %H:%M:%S'
+  '''
   date_fmt = '%d %H:%M'
   date_formatter = mdates.DateFormatter(date_fmt)
   ax1.xaxis.set_major_formatter(date_formatter)
 
   #Tilt x-axis text to fit
   fig.autofmt_xdate()
+  '''
+  ax1.autoscale_view()
 
   plt.show()
 
-trades(1290)
+trades(1500)
