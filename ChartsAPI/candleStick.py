@@ -19,12 +19,13 @@ __all__ = ['trades']
 #CSV endpoint where transaction history exists
 URL = "http://api.bitcoincharts.com/v1/trades.csv?symbol=bitfinexUSD&start="
 
-#unixtime,volume,amount
+#unixtime,price,amount
 def trades(timeSince): # gets the innermost bid and asks and information on the most recent trade.
   adjustedTime = int(time.time()) - timeSince
   response = requests.get(URL + str(adjustedTime))
+  print "\nLooking back until ",adjustedTime
   splitResponse = response.text.splitlines()
-  volumes = []
+  prices = []
   timestamps = []
   amounts = [] 
 
@@ -36,23 +37,22 @@ def trades(timeSince): # gets the innermost bid and asks and information on the 
   #Only keep one of each 30 lines
   #splitResponse = splitResponse[::30]  
 
-  print "First entry to splitResponse ", splitResponse[0]
-#Generate arrays for timestamp, volume, and volume
+#Generate arrays for timestamp, price, and price
   for i,line in enumerate(splitResponse):
     splitline = splitResponse[i].split(',') 
     timestamp = splitline[0] 
-    volume = round(float(splitline[1]),2)
+    price = round(float(splitline[1]),2)
     amount = splitline[2] 
     times = []
     vols = [] 
     #print "appending timestamp ", timestamp
     '''
     timestamps.append(float(timestamp))
-    volumes.append(float(volume))
+    prices.append(float(price))
     amounts.append(float(amount))
     '''
     timestamps.insert(0, float(timestamp))
-    volumes.insert(0,float(volume))
+    prices.insert(0,float(price))
     amounts.insert(0, float(amount))
 
   #currentTime = calendar.timegm(time.gmtime())
@@ -60,14 +60,14 @@ def trades(timeSince): # gets the innermost bid and asks and information on the 
   print "time remainder: ", (currentTime % 60)
   targetTime = currentTime - (currentTime % 60)
   print "current time: ", currentTime
-  print "closest minute epoch: ", targetTime
-
-  currentHigh = timestamps[0]
-  currentLow = timestamps[0]
+  print "closest minute epoch: ", targetTime 
+  currentHigh = prices[0]
+  currentLow = prices[0]
 
   for i,element in enumerate(timestamps):
     #print "inside for loop at timestamp", element
     if (i == len(timestamps) - 1): #Stop one early so we don't go over bounds
+      print "AT END OF STRING. timestamp ", element
       break
     if (currentHigh < element):
       currentHigh = element
@@ -75,41 +75,49 @@ def trades(timeSince): # gets the innermost bid and asks and information on the 
       if (currentLow > element):
         currentLow = element
     #print "timestamps[i], +1: ", timestamps[i], ", ", timestamps[i+1]
-    if timestamps[i] > targetTime and timestamps[i+1] < targetTime:
-      times.append(timestamps[i])
-      openp.append(timestamps[i])
-      closep.append(timestamps[i+1])
+    if timestamps[i+1] < targetTime:
+      #times.append(timestamps[i])
+      times.append(targetTime)
+      openp.append(prices[i])
+      closep.append(prices[i+1])
       highp.append(currentHigh)
       lowp.append(currentLow)
-      vols.append(volumes[i])
-      print "\n\nclose: ", timestamps[i], " open: ", timestamps[i+1] 
+      vols.append(amounts[i])
+      print "\n\nclose: ", prices[i], " open: ", prices[i+1] 
       targetTime -= 60 #Look at open/close of next minute
-      currentLow = timestamps[i+1]
+      print "new target time: ", targetTime
+      currentLow = prices[i+1]
       currentHigh = currentLow
 
   candleAr = []
   for i, element in enumerate(times):
+#    dates = matplotlib.dates.date2num(list_of_datetimes)
+    #appendLine = mdates.epoch2num(times[i]), openp[i], closep[i], highp[i], lowp[i], vols[i]
+    print "Event at time: ", times[i]
     appendLine = mdates.epoch2num(times[i]), openp[i], closep[i], highp[i], lowp[i], vols[i]
+    print "append line: ", appendLine
     candleAr.append(appendLine)
 
 
   fig = plt.figure()
 
-  #Generate first volume chart (on top)
-  ax1 = plt.subplot(2,1,1)
+  #Generate first price chart (on top)
+  #ax1 = plt.subplot(2,1,1)
+  ax1 = plt.subplot(1,1,1)
   secs = mdates.epoch2num(timestamps)
-  candlestick(ax1, candleAr, width=1, colorup='g', colordown='r')
-  #ax1.plot_date(secs, volumes, 'k-', linewidth=.7)
+  candlestick(ax1, candleAr, width=.5, colorup='g', colordown='r')
+  #ax1.plot_date(secs, prices, 'k-', linewidth=.7)
 
   ax1.grid(True)
   plt.xlabel('Date')
   plt.ylabel('Bitcoin Price')
-
-  #Generate second volume chart (on bottom)
+  '''
+  #Generate second price chart (on bottom)
   ax2 = plt.subplot(2,1,2, sharex=ax1)
   ax2.plot(secs, amounts)
   ax2.grid(True)
   plt.ylabel('Volume')
+  '''
 
   #Use a DateFormatter to set the data to the correct format.
   #Choose your xtick format string
