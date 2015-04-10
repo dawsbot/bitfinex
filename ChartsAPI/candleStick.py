@@ -57,10 +57,10 @@ def trades(timeSince): # gets the innermost bid and asks and information on the 
   for i,element in enumerate(timestamps):
     if (i == len(timestamps) - 1): #Stop one early so we don't go over bounds
       break
-    if (currentHigh < element):
+    if (currentHigh < prices[i]):
       currentHigh = prices[i]
     else:
-      if (currentLow > element):
+      if (currentLow > prices[i]):
         currentLow = prices[i]
     if timestamps[i+1] < targetTime:
       times.append(targetTime)
@@ -110,4 +110,4 @@ def trades(timeSince): # gets the innermost bid and asks and information on the 
 
   plt.show()
 
-trades(3500)
+trades(4500)
