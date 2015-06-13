@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-#Places a put and take 2btc above and 1btc last price
+#Places a put and take above and below current market price
 import FinexAPI
 
-diff = 2 #The amount above or below you want
+diff = 2 #The amount above or below market price you want
 ticker = FinexAPI.ticker()
 available = float(FinexAPI.balances()[2]["available"])
-ask = float(ticker["ask"]) 
-amount = available/ask 
+ask = float(ticker["ask"])
+amount = 0.01 #Amount of BTC to place orders
 
 marketPrice = ticker["last_price"]
 buyPrice = float(marketPrice) - diff
