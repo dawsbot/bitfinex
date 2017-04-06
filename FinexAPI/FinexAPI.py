@@ -153,7 +153,7 @@ def delete_order(order_id): # cancel an order.
 	rep = r.json()
 
 	try:
-		rep['avg_excution_price']
+		rep['avg_execution_price']
 	except:
 		return rep['message']
 
@@ -174,7 +174,7 @@ def delete_all_order(): # cancel an order.
 	return rep
 '''
 	try:
-		rep['avg_excution_price']
+		rep['avg_execution_price']
 	except:
 		return rep['message']
 '''
@@ -194,7 +194,7 @@ def status_order(order_id): # get the status of an order. Is it active? Was it c
 	rep = r.json()
 
 	try:
-		rep['avg_excution_price']
+		rep['avg_execution_price']
 	except:
 		return rep['message']
 
