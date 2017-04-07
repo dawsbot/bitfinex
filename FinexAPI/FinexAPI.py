@@ -9,7 +9,7 @@ import hmac
 import hashlib
 import time
 
-__all__ = ['ticker', 'today', 'orderbook', 'lendbook', 'stats', 'trades', 'lends', 'symbols', 'place_order', 'delete_order', 'delete_all_order', 'status_order', 'active_orders', 'active_positions', 'place_offer', 'cancel_offer', 'status_offer', 'active_offers', 'past_trades', 'balances', 'claim_position']
+__all__ = ['ticker', 'today', 'orderbook', 'lendbook', 'stats', 'trades', 'lends', 'symbols', 'place_order', 'delete_order', 'delete_all_order', 'status_order', 'active_orders', 'active_positions', 'place_offer', 'cancel_offer', 'status_offer', 'active_offers', 'past_trades', 'balances', 'claim_position', 'close_position']
 
 URL = "https://api.bitfinex.com/v1"
 
@@ -242,6 +242,22 @@ def claim_position(position_id): # Claim a position.
 
 	signed_payload = payloadPacker(payload)
 	r = requests.post(URL + "/position/claim", headers=signed_payload, verify=True)
+	rep = r.json()
+
+	return rep
+
+def close_position(position_id): # Close a position.
+
+	payload = {
+
+		"request":"/v1/position/close",
+		"nonce":genNonce(),
+		"position_id":position_id
+
+	}
+
+	signed_payload = payloadPacker(payload)
+	r = requests.post(URL + "/position/close", headers=signed_payload, verify=True)
 	rep = r.json()
 
 	return rep
