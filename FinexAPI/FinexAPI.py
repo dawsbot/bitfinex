@@ -13,7 +13,7 @@ __all__ = ['ticker', 'today', 'orderbook', 'lendbook', 'stats', 'trades', 'lends
 
 URL = "https://api.bitfinex.com/v1"
 
-fp = open("keys.txt")
+fp = open("../keys.txt")
 
 API_KEY = fp.readline().rstrip() # put your API public key here.
 API_SECRET = fp.readline().rstrip() # put your API private key here.
@@ -153,7 +153,7 @@ def delete_order(order_id): # cancel an order.
 	rep = r.json()
 
 	try:
-		rep['avg_excution_price']
+		rep['avg_execution_price']
 	except:
 		return rep['message']
 
@@ -174,7 +174,7 @@ def delete_all_order(): # cancel an order.
 	return rep
 '''
 	try:
-		rep['avg_excution_price']
+		rep['avg_execution_price']
 	except:
 		return rep['message']
 '''
@@ -194,7 +194,7 @@ def status_order(order_id): # get the status of an order. Is it active? Was it c
 	rep = r.json()
 
 	try:
-		rep['avg_excution_price']
+		rep['avg_execution_price']
 	except:
 		return rep['message']
 
