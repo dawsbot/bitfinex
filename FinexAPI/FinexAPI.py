@@ -9,11 +9,11 @@ import hmac
 import hashlib
 import time
 
-__all__ = ['ticker', 'today', 'orderbook', 'lendbook', 'stats', 'trades', 'lends', 'symbols', 'place_order', 'delete_order', 'delete_all_order', 'status_order', 'active_orders', 'active_positions', 'place_offer', 'cancel_offer', 'status_offer', 'active_offers', 'past_trades', 'balances', 'claim_position', 'close_position']
+__all__ = ['ticker', 'today', 'orderbook', 'lendbook', 'stats', 'trades', 'lends', 'symbols', 'place_order', 'delete_order', 'delete_all_order', 'status_order', 'active_orders', 'active_positions', 'place_offer', 'cancel_offer', 'status_offer', 'active_offers', 'past_trades', 'balances', 'claim_position', 'close_position', 'withdraw']
 
 URL = "https://api.bitfinex.com/v1"
 
-fp = open("../keys.txt")
+fp = open("keys.txt")
 
 API_KEY = fp.readline().rstrip() # put your API public key here.
 API_SECRET = fp.readline().rstrip() # put your API private key here.
@@ -153,7 +153,7 @@ def delete_order(order_id): # cancel an order.
 	rep = r.json()
 
 	try:
-		rep['avg_execution_price']
+		rep['avg_excution_price']
 	except:
 		return rep['message']
 
@@ -174,7 +174,7 @@ def delete_all_order(): # cancel an order.
 	return rep
 '''
 	try:
-		rep['avg_execution_price']
+		rep['avg_excution_price']
 	except:
 		return rep['message']
 '''
@@ -194,7 +194,7 @@ def status_order(order_id): # get the status of an order. Is it active? Was it c
 	rep = r.json()
 
 	try:
-		rep['avg_execution_price']
+		rep['avg_excution_price']
 	except:
 		return rep['message']
 
@@ -246,7 +246,7 @@ def claim_position(position_id): # Claim a position.
 
 	return rep
 
-def close_position(position_id): # Close a position.
+def close_position(position_id): # Claim a position.
 
 	payload = {
 
@@ -357,6 +357,25 @@ def balances(): # see your balances.
 
 	signed_payload = payloadPacker(payload)
 	r = requests.post(URL + "/balances", headers=signed_payload, verify=True)
+	rep = r.json()
+
+	return rep
+
+def withdraw(withdraw_type, walletselected, amount, address):
+
+	payload = {
+
+		"request":"/v1/withdraw",
+		"nonce":genNonce(),
+		"withdraw_type":withdraw_type,
+		"walletselected":walletselected,
+		"amount":amount,
+		"address":address
+
+	}
+
+	signed_payload = payloadPacker(payload)
+	r = requests.post(URL + "/withdraw", headers=signed_payload, verify=True)
 	rep = r.json()
 
 	return rep
