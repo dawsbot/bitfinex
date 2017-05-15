@@ -17,7 +17,7 @@ fp = open("../keys.txt")
 
 API_KEY = fp.readline().rstrip() # put your API public key here.
 API_SECRET = fp.readline().rstrip() # put your API private key here.
-print "Your pub: " + str(API_KEY)
+print ("Your pub: " + str(API_KEY))
 #print "Your priv: " + str(API_SECRET)
 
 # unauthenticated
