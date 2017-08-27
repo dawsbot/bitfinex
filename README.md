@@ -28,7 +28,5 @@ The scripts are configured for this wallet and not your <b>trading</b> wallet
 Here is a vis of my trade history on Bitfinex. (The smallest dots were performed by execution of ```/examples/putTake.py```)<br>
 ![screenshot](http://i.imgur.com/8PBxnvZ.png)
 
-<b>If donating is your kind of thing: 14Gp132H9r2jUEre2TYZuVLTk5VEneBoKX</b>
-
 If you like what you see let me know and I will continue contributing to this.<br>
 In using this software, you take full responsibility of the results.
