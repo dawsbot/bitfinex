@@ -3,6 +3,8 @@
 Python scripts for the [Bitfinex](https://www.Bitfinex.com/) exchange.
 Use this to learn about algorithmic trading on the Bitcoin market.<br>
 
+⚠️  Searching for co-owners on this project. Bitfinex is no longer available to US residents and I cannot execute the code on my account any longer. Please open an issue or email me at dawsonbotsford AT gmail DOT com to help.   
+
 
 ## Install
 
