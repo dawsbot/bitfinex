@@ -6,7 +6,7 @@ setup(name='FinexAPI',
       version='1.0',
       description='BitFinex API wrapper',
       author='jndok & Dawson Botsford',
-      author_email='3408480+dawsbot@users.noreply.github.com',
+      author_email='',
       url='https://github.com/dawsonbotsford/bitfinex',
       packages=['FinexAPI'],
      )
